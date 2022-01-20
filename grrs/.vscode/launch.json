@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Debug",
             "program": "${workspaceFolder}/target/debug/grrs",
-            "args": [],
+            "args": ["pattern", "./data/test.txt"],
             "cwd": "${workspaceFolder}",
             "sourceLanguages": ["rust"],
             "preLaunchTask": "rust: cargo run"
