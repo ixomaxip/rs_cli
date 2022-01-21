@@ -28,7 +28,7 @@ fn main() -> Result<()> {
             Err(error) => { println!("line error: {:?}", error); "".to_string() }
         };
         if line.contains(&args.pattern) {
-            print!("{}", line);
+            println!("{}", line);
         }
     }
 
