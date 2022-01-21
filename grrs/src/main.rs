@@ -1,6 +1,7 @@
-use std::io::{self, BufReader, BufRead};
+use std::io::{BufReader, BufRead};
 use std::fs::File;
 use clap::Parser;
+use anyhow::{Context, Result};
 
 #[derive(Parser, Debug)]
 struct Cli {
@@ -12,11 +13,12 @@ struct Cli {
 #[derive(Debug)]
 struct CustomError(String);
 // fn main() -> Result<(), Box<dyn std::error::Error>> {
-fn main() -> Result<(), CustomError> {
+fn main() -> Result<()> {
     let args = Cli::parse();
-    let path = args.path.to_str().unwrap();
+    let path = args.path.to_str()
+        .with_context(|| "bad path")?;
     let file = File::open(path)
-        .map_err(|err| CustomError(format!("Error reading `{}`: {}", path, err)))?;
+        .with_context(|| format!("could not read file '{}'", path))?;
     
     let reader = BufReader::new(file);
     
