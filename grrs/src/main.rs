@@ -9,12 +9,16 @@ struct Cli {
     path: std::path::PathBuf
 }
 
+#[derive(Debug)]
+struct CustomError(String);
 // fn main() -> Result<(), Box<dyn std::error::Error>> {
-fn main() -> io::Result<()> {
+fn main() -> Result<(), CustomError> {
     let args = Cli::parse();
-    let file = File::open(&args.path)?;
+    let path = args.path.to_str().unwrap();
+    let file = File::open(path)
+        .map_err(|err| CustomError(format!("Error reading `{}`: {}", path, err)))?;
     
-    let reader = BufReader::new(file);   
+    let reader = BufReader::new(file);
     
     for line in reader.lines() {
         let line = match line {
