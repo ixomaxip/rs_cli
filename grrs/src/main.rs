@@ -12,10 +12,8 @@ struct Cli {
 // fn main() -> Result<(), Box<dyn std::error::Error>> {
 fn main() -> io::Result<()> {
     let args = Cli::parse();
-    let file = match File::open(&args.path) {
-        Ok(f) => f,
-        Err(error) => return Err(error.into())
-    };
+    let file = File::open(&args.path)?;
+    
     let reader = BufReader::new(file);   
     
     for line in reader.lines() {
