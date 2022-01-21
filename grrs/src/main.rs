@@ -11,13 +11,10 @@ struct Cli {
     #[clap(parse(from_os_str))]
     path: std::path::PathBuf
 }
-
-#[derive(Debug)]
-struct CustomError(String);
 // fn main() -> Result<(), Box<dyn std::error::Error>> {
 fn main() -> Result<()> {
     env_logger::init();
-    
+
     let args = Cli::parse();
     let path = args.path.to_str()
         .with_context(|| "bad path")?;
