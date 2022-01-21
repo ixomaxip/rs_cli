@@ -11,6 +11,19 @@ struct Cli {
     #[clap(parse(from_os_str))]
     path: std::path::PathBuf
 }
+
+fn find_matches(reader: BufReader<File>, pattern: &str) {
+    for (idx, line) in reader.lines().enumerate() {
+        let line = match line {
+            Ok(l) => l,
+            Err(error) => { warn!("line error: {:?}", error); "".to_string() }
+        };
+        if line.contains(pattern) {
+            println!("{}\t{}", idx, line);
+        }
+    }
+}
+
 // fn main() -> Result<(), Box<dyn std::error::Error>> {
 fn main() -> Result<()> {
     env_logger::init();
@@ -25,16 +38,8 @@ fn main() -> Result<()> {
     info!("read file {}", path);
     
     let reader = BufReader::new(file);
-    
-    for line in reader.lines() {
-        let line = match line {
-            Ok(l) => l,
-            Err(error) => { warn!("line error: {:?}", error); "".to_string() }
-        };
-        if line.contains(&args.pattern) {
-            println!("{}", line);
-        }
-    }
+    find_matches(reader, &args.pattern);
+
 
     Ok(())
 }
