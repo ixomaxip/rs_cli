@@ -21,10 +21,10 @@ fn find_content() -> Result<(), Box<dyn std::error::Error>> {
     file.write_str("test data\ncheck data\ntrue data\nfalse data\ntest")?;
     
     let mut cmd = Command::cargo_bin("grrs")?;
-    cmd.arg("test").arg(file.path());
-    cmd.assert()
-    .success()
-    .stdout(predicate::str::contains("0\ttest data\n4\ttest"));
+    cmd.arg("test").arg(file.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("0\ttest data\n4\ttest"));
     Ok(())
 }
 
