@@ -12,16 +12,17 @@ struct Cli {
     path: std::path::PathBuf
 }
 
-fn find_matches(reader: BufReader<File>, pattern: &str, mut writer: impl std::io::Write) {
+fn find_matches(reader: BufReader<File>, pattern: &str, mut writer: impl std::io::Write) -> Result<()> {
     for (idx, line) in reader.lines().enumerate() {
         let line = match line {
             Ok(l) => l,
             Err(error) => { warn!("line error: {:?}", error); "".to_string() }
         };
         if line.contains(pattern) {
-            writeln!(writer, "{}\t{}", idx, line);
+            writeln!(writer, "{}\t{}", idx, line)?;
         }
     }
+    Ok(())
 }
 
 // fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -38,7 +39,7 @@ fn main() -> Result<()> {
     info!("read file {}", path);
     
     let reader = BufReader::new(file);
-    find_matches(reader, &args.pattern, &mut std::io::stdout());
+    find_matches(reader, &args.pattern, &mut std::io::stdout())?;
 
     Ok(())
 }
