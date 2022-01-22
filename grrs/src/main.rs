@@ -1,28 +1,17 @@
-use std::io::{BufReader, BufRead};
+use std::io::BufReader;
 use std::fs::File;
 use clap::Parser;
 use anyhow::{Context, Result};
-use log::{info, warn};
+use log::info;
 use env_logger;
+
+use grrs::find_matches;
 
 #[derive(Parser, Debug)]
 struct Cli {
     pattern: String,
     #[clap(parse(from_os_str))]
     path: std::path::PathBuf
-}
-
-fn find_matches(reader: BufReader<File>, pattern: &str, mut writer: impl std::io::Write) -> Result<()> {
-    for (idx, line) in reader.lines().enumerate() {
-        let line = match line {
-            Ok(l) => l,
-            Err(error) => { warn!("line error: {:?}", error); "".to_string() }
-        };
-        if line.contains(pattern) {
-            writeln!(writer, "{}\t{}", idx, line)?;
-        }
-    }
-    Ok(())
 }
 
 // fn main() -> Result<(), Box<dyn std::error::Error>> {
