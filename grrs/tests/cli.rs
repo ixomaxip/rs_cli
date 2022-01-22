@@ -1,4 +1,5 @@
 use assert_cmd::prelude::*;
+use assert_fs::prelude::*;
 use predicates::prelude::*;
 use std::process::Command;
 
@@ -11,6 +12,19 @@ fn file_doesnt_exist() -> Result<(), Box<dyn std::error::Error>> {
     cmd.assert()
         .failure()
         .stderr(predicate::str::contains("could not read file"));
+    Ok(())
+}
+
+#[test]
+fn find_content() -> Result<(), Box<dyn std::error::Error>> {
+    let file = assert_fs::NamedTempFile::new("test.txt")?;
+    file.write_str("test data\ncheck data\ntrue data\nfalse data\ntest")?;
+    
+    let mut cmd = Command::cargo_bin("grrs")?;
+    cmd.arg("test").arg(file.path());
+    cmd.assert()
+    .success()
+    .stdout(predicate::str::contains("0\ttest data\n4\ttest"));
     Ok(())
 }
 
