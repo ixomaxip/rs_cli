@@ -15,16 +15,61 @@ fn file_doesnt_exist() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+fn get_file_w_content(content: &str) -> Result<assert_fs::NamedTempFile, Box<dyn std::error::Error>> {
+    let file = assert_fs::NamedTempFile::new("test.txt")?;
+    file.write_str(content)?;
+    Ok(file)
+}
+
 #[test]
 fn find_content() -> Result<(), Box<dyn std::error::Error>> {
-    let file = assert_fs::NamedTempFile::new("test.txt")?;
-    file.write_str("test data\ncheck data\ntrue data\nfalse data\ntest")?;
+    let content = "test data\ncheck data\ntrue data\nfalse data\ntest";
+    let file = get_file_w_content(content)?;
     
     let mut cmd = Command::cargo_bin("grrs")?;
     cmd.arg("test").arg(file.path())
         .assert()
         .success()
         .stdout(predicate::str::contains("0\ttest data\n4\ttest"));
+    Ok(())
+}
+
+#[test]
+fn empty_file() -> Result<(), Box<dyn std::error::Error>> {
+    let content = "";
+    let file = get_file_w_content(content)?;
+    
+    let mut cmd = Command::cargo_bin("grrs")?;
+    cmd.arg("test").arg(file.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(""));
+    Ok(())
+}
+
+#[test]
+fn nothing_to_find() -> Result<(), Box<dyn std::error::Error>> {
+    let content = "test data\ncheck data\ntrue data\nfalse data\ntest";
+    let file = get_file_w_content(content)?;
+    
+    let mut cmd = Command::cargo_bin("grrs")?;
+    cmd.arg("nest").arg(file.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(""));
+    Ok(())
+}
+
+#[test]
+fn empty_pattern() -> Result<(), Box<dyn std::error::Error>> {
+    let content = "test data\ncheck data\ntrue data\nfalse data\ntest";
+    let file = get_file_w_content(content)?;
+    
+    let mut cmd = Command::cargo_bin("grrs")?;
+    cmd.arg("").arg(file.path())
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(""));
     Ok(())
 }
 
