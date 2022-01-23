@@ -3,7 +3,7 @@ use std::fs::File;
 use clap::Parser;
 use anyhow::{Context, Result};
 
-use grrs::finder::helpers::find_matches;
+use grrs::helpers::finder::find_matches;
 
 #[derive(Parser, Debug)]
 struct Cli {
