@@ -2,7 +2,6 @@ use std::io::BufReader;
 use std::fs::File;
 use clap::Parser;
 use anyhow::{Context, Result};
-use env_logger;
 
 use grrs::helpers::find_matches;
 
