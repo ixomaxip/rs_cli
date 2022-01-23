@@ -3,8 +3,10 @@ use assert_fs::prelude::*;
 use predicates::prelude::*;
 use std::process::Command;
 
+type Res<T> = ::std::result::Result<T, Box<dyn std::error::Error>>;
+
 #[test]
-fn file_doesnt_exist() -> Result<(), Box<dyn std::error::Error>> {
+fn file_doesnt_exist() -> Res<()> {
     
     let mut cmd = Command::cargo_bin("grrs")?;
 
@@ -15,14 +17,14 @@ fn file_doesnt_exist() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn get_file_w_content(content: &str) -> Result<assert_fs::NamedTempFile, Box<dyn std::error::Error>> {
+fn get_file_w_content(content: &str) -> Res<assert_fs::NamedTempFile> {
     let file = assert_fs::NamedTempFile::new("test.txt")?;
     file.write_str(content)?;
     Ok(file)
 }
 
 #[test]
-fn find_content() -> Result<(), Box<dyn std::error::Error>> {
+fn find_content() -> Res<()> {
     let content = "test data\ncheck data\ntrue data\nfalse data\ntest";
     let file = get_file_w_content(content)?;
     
@@ -35,7 +37,7 @@ fn find_content() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[test]
-fn empty_file() -> Result<(), Box<dyn std::error::Error>> {
+fn empty_file() -> Res<()> {
     let content = "";
     let file = get_file_w_content(content)?;
     
@@ -48,7 +50,7 @@ fn empty_file() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[test]
-fn nothing_to_find() -> Result<(), Box<dyn std::error::Error>> {
+fn nothing_to_find() -> Res<()> {
     let content = "test data\ncheck data\ntrue data\nfalse data\ntest";
     let file = get_file_w_content(content)?;
     
@@ -61,7 +63,7 @@ fn nothing_to_find() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[test]
-fn empty_pattern() -> Result<(), Box<dyn std::error::Error>> {
+fn empty_pattern() -> Res<()> {
     let content = "test data\ncheck data\ntrue data\nfalse data\ntest";
     let file = get_file_w_content(content)?;
     
