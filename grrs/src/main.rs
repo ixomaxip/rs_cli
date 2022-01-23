@@ -4,7 +4,7 @@ use clap::Parser;
 use anyhow::{Context, Result};
 use env_logger;
 
-use grrs::find_matches;
+use grrs::helpers::find_matches;
 
 #[derive(Parser, Debug)]
 struct Cli {
