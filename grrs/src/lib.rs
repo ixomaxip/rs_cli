@@ -1,14 +1,13 @@
 use anyhow::Result;
 use std::fs::File;
 use std::io::{BufReader, BufRead};
-use log::{info, warn};
+use log::{warn};
 
 pub fn answer() -> i32 {
     42
 }
 
 pub fn find_matches(reader: BufReader<File>, pattern: &str, mut writer: impl std::io::Write) -> Result<()> {
-    info!("find_matches");
     for (idx, line) in reader.lines().enumerate() {
         let line = match line {
             Ok(l) => l,

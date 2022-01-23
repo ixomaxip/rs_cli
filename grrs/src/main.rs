@@ -2,7 +2,6 @@ use std::io::BufReader;
 use std::fs::File;
 use clap::Parser;
 use anyhow::{Context, Result};
-use log::info;
 use env_logger;
 
 use grrs::find_matches;
@@ -24,8 +23,6 @@ fn main() -> Result<()> {
     
     let file = File::open(path)
         .with_context(|| format!("could not read file '{}'", path))?;
-    
-    info!("read file {}", path);
     
     let reader = BufReader::new(file);
     find_matches(reader, &args.pattern, &mut std::io::stdout())?;
